@@ -10,7 +10,7 @@ struct LNode
 
 class LinkList
 {
-    public:
+public:
     void Init()
     {
         head = new LNode;
@@ -35,10 +35,11 @@ class LinkList
         {
             p = p->next;
         }
-
+        s->next = p->next;
+        p->next = s;
     }
 
-    private:
+private:
     LNode* head;
     int length;
 
