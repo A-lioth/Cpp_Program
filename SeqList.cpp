@@ -7,11 +7,22 @@ using namespace std;
 class SeqList
 {
 public:
-    void Init(SeqList &L);
+
+    void Menu()
     {
-        L->length = 0;
+        cout << "1.插入" << endl;
+        cout << "2.删除" << endl;
+        cout << "3.查找" << endl;
+        cout << "4.修改" << endl;
+        cout << "5.输出" << endl;
+        cout << "6.退出" << endl;
+    }
+
+    void Init(SeqList &L)
+    {
+        L.length = 0;
         for (int i = 0; i < MaxSize; i++)
-            L->data[i] = 0;
+            L.data[i] = 0;
     }
 
     int Insert(SeqList &L, int pos, Datatype x)
@@ -51,6 +62,7 @@ public:
     }
 
 private:
+
     Datatype data[MaxSize];
     int length;
 };
@@ -58,9 +70,12 @@ private:
 int main()
 {
     SeqList L;
-    L.Init(&L);
-    int ret = L.Insert(&L, 1, 1);
+    L.Init(L);
+    int ret = L.Insert(L, 1, 1);
     L.Output();
+
+    
     system("pause");
     return 0;
 }
+
