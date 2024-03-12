@@ -3,11 +3,9 @@ using namespace std;
 #define Datatype int
 #define MaxSize 20
 
-
 class SeqList
 {
 public:
-
     void Menu()
     {
         cout << "1.插入" << endl;
@@ -46,7 +44,7 @@ public:
 
     Datatype Search(int pos)
     {
-        if (pos>=0 && pos <= length)
+        if (pos >= 0 && pos <= length)
         {
             return data[pos - 1];
         }
@@ -62,7 +60,6 @@ public:
     }
 
 private:
-
     Datatype data[MaxSize];
     int length;
 };
@@ -74,8 +71,6 @@ int main()
     int ret = L.Insert(L, 1, 1);
     L.Output();
 
-    
     system("pause");
     return 0;
 }
-
