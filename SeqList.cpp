@@ -3,17 +3,19 @@ using namespace std;
 #define Datatype int
 #define MaxSize 20
 
+Datatype Data[MaxSize] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
 class SeqList
 {
 public:
     void Menu()
     {
-        cout << "1.æ’å…¥" << endl;
-        cout << "2.åˆ é™¤" << endl;
-        cout << "3.æŸ¥æ‰¾" << endl;
-        cout << "4.ä¿®æ”¹" << endl;
-        cout << "5.è¾“å‡º" << endl;
-        cout << "6.é€€å‡º" << endl;
+        cout << "1.²åÈë" << endl;
+        cout << "2.É¾³ý" << endl;
+        cout << "3.²éÕÒ" << endl;
+        cout << "4.¶¨Î»" << endl;
+        cout << "5.´´½¨±í1" << endl;
+        cout << "6.´´½¨±í2" << endl;
+        cout << "7.ÍË³ö" << endl;
     }
 
     void Init(SeqList &L)
@@ -27,35 +29,67 @@ public:
     {
         if (pos < 0 || pos > length + 1)
             return -1;
-        for (int i = length; i >= pos - 1; i--)
-            data[i + 1] = data[i];
-        data[pos - 1] = x;
-        length++;
+        for (int i = L.length; i >= pos - 1; i--)
+            L.data[i + 1] = L.data[i];
+        L.data[pos - 1] = x;
+        L.length++;
         return 1;
     }
 
-    void Create01()
+    void Create01(SeqList &L)
     {
-    }
-
-    void Create02()
-    {
-    }
-
-    Datatype Search(int pos)
-    {
-        if (pos >= 0 && pos <= length)
+        cout << "ÇëÊäÈëÔªËØ¸öÊý£º";
+        cin >> L.length;
+        cout << "ÇëÊäÈëÔªËØ£º" << endl;
+        for (int i = 0; i < length; i++)
         {
-            return data[pos - 1];
+            cin >> L.data[i];
         }
+        return;
+    }
+
+    void Create02(SeqList &L, Datatype Data[])
+    {
+        //int len = sizeof(Data) / sizeof(Data[0]);
+        //cout << len << endl;
+        int len = 20;
+        for (int i = 0; i < len; i++)
+            L.data[i] = Data[i];
+        L.length = len;
+    }
+
+    Datatype Search(SeqList &L, int pos)
+    {
+        if (pos >= 0 && pos <= L.length)
+            return L.data[pos - 1];
         else
             return -1;
     }
 
-    void Output()
+    int Delete(SeqList &L, int pos)
     {
-        for (int i = 0; i < length; i++)
-            cout << data[i] << " ";
+        if (pos < 0 || pos > L.length)
+            return -1;
+        for (int i = pos; i < L.length; i++)
+            L.data[i - 1] = L.data[i];
+        length--;
+        return 1;
+    }
+
+    int Locate(SeqList &L, Datatype x)
+    {
+        if (L.length == 0)
+            return -1;
+        for (int i = 0; i < L.length; i++)
+            if (L.data[i] == x)
+                return i + 1;
+        return -1;
+    }
+
+    void Output(SeqList &L)
+    {
+        for (int i = 0; i < L.length; i++)
+            cout << L.data[i] << " ";
         cout << endl;
     }
 
@@ -66,10 +100,62 @@ private:
 
 int main()
 {
+    int input = 0;
+    int pos = 0;
+    int lot = 0;
     SeqList L;
     L.Init(L);
-    int ret = L.Insert(L, 1, 1);
-    L.Output();
+
+    do
+    {
+        L.Menu();
+        cout << "ÇëÊäÈëÑ¡Ïî£º";
+        cin >> input;
+        switch (input)
+        {
+        case 1:
+            Datatype x;
+            cout << "ÇëÊäÈëÒª²åÈëµÄÎ»ÖÃ£º";
+            cin >> pos;
+            cout << "ÇëÊäÈëÒª²åÈëµÄÖµ£º";
+            cin >> x;
+            L.Insert(L, pos, x);
+            L.Output(L);
+            break;
+
+        case 2:
+            cout << "ÇëÊäÈëÒªÉ¾³ýµÄÎ»ÖÃ£º";
+            cin >> pos;
+            L.Delete(L, pos);
+            L.Output(L);
+            break;
+
+        case 3:
+            cout << "ÇëÊäÈëÒª²éÕÒµÄÎ»ÖÃ£º";
+            cin >> pos;
+            cout << "²éÕÒµÄÔªËØÎª£º" << L.Search(L, pos) << endl;
+            break;
+
+        case 4:
+            cout << "ÇëÊäÈëÒª¶¨Î»µÄÔªËØ£º";
+            cin >> lot;
+            cout << "ÔªËØµÄÎ»ÖÃÎª£º" << L.Locate(L, lot) << endl;
+            break;
+
+        case 5:
+            L.Create01(L);
+            L.Output(L);
+            break;
+
+        case 6:
+            L.Create02(L, Data);
+            L.Output(L);
+            break;
+
+        default:
+            break;
+        }
+    } while (input!= 7);
 
     system("pause");
     return 0;
