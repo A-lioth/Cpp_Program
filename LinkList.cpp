@@ -48,8 +48,8 @@ private:
 
 int main()
 {
-    //LinkList L;
-    cout << "hello world" << endl;
+    LinkList L;
+    
     system("pause");
     return 0;
 }
