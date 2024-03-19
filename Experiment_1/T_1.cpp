@@ -14,7 +14,8 @@ void CreateSeqList(SeqList &L)
     int i = 0;
     int temp;
     cin >> L.data[0];
-    for (i = 0; i < MaxSize; i++)
+    L.length++;
+    for (i = 0; i < MaxSize - 1; i++)
     {
         cin >> temp;
         for (int j = i; j > -1; j--)
@@ -26,8 +27,12 @@ void CreateSeqList(SeqList &L)
                 L.data[j] = temp;
             }
             else
+            {
                 L.data[j + 1] = temp;
+                break;
+            }
         }
+        L.length++;
     }
 }
 void OutputSeqList(SeqList &L)
