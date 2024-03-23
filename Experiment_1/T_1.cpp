@@ -1,8 +1,9 @@
 #include <iostream>
 using namespace std;
 
-#define MaxSize 5
+const int MaxSize = 5;
 
+// T_1
 typedef struct
 {
     int data[MaxSize];
@@ -42,46 +43,33 @@ void OutputSeqList(SeqList &L)
     cout << endl;
 }
 
+// T_2
 typedef struct Node
 {
     int data;
     struct Node *next;
-    int length = 0;
 } LinkList;
 
-void CreateLinkList(LinkList *&head)
+LinkList *CreateLinkList(LinkList *head)
 {
-    LinkList *q = new LinkList;
-    q->next = NULL;
-    head->next = q; // 将头指针指向第一个节点
-    cin >> q->data;
-    LinkList *r = head->next;
-    for (int i = 0; i < MaxSize - 1; i++)
+    for (int i = 0; i < MaxSize; i++)
     {
         LinkList *p = new LinkList;
-        p->next = NULL;
         cin >> p->data;
-        r = head;
-        while (!r)
+        LinkList *prev = head;
+        LinkList *current = head->next;
+        while (current != NULL && current->data < p->data)
         {
-            if (p->data < r->data)
-            {
-                p->next = r->next;
-                r->next = p;
-            }
-            else
-            {
-                r = r->next;
-            }
+            prev = current;
+            current = current->next;
         }
-
-        p = NULL;
-
-        head->length++; // 更新头指针的
+        prev->next = p;
+        p->next = current;
     }
+    return head;
 }
 
-void OutputLinkList(LinkList &L, LinkList *head)
+void OutputLinkList(LinkList *head)
 {
     LinkList *p = head;
     while (p != NULL)
@@ -92,19 +80,38 @@ void OutputLinkList(LinkList &L, LinkList *head)
     cout << endl;
 }
 
-// 随机输入一组数，创建一个元素递增有序的单链表
+// T_3
+int IsOrdered(LinkList *head)
+{
+    if (head == NULL || head->next == NULL)
+    {
+        return 0;
+    }
+    LinkList *p = head->next;
+    while (p != NULL && p->next != NULL)
+    {
+        if (p->data > p->next->data)
+            return -1;
+        p = p->next;
+    }
+    return 1;
+}
+
 int main()
 {
-    //SeqList L;
-    // CreateSeqList(L);
-    // OutputSeqList(L);
+    // T_1
+    //  SeqList L;
+    //   CreateSeqList(L);
+    //   OutputSeqList(L);
+    // T_2
     LinkList L2;
     LinkList *head = new LinkList;
     head->next = NULL;
-    head->length = 0;
     head->data = 0;
     CreateLinkList(head);
-    OutputLinkList(L2, head);
+    // OutputLinkList(head);
+    // T_3
+    // cout << IsOrdered(head) << endl;
     system("pause");
     return 0;
 }
