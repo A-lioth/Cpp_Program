@@ -8,19 +8,18 @@ struct Node
     Node *next;
 };
 
-class DoublyLinkList
+class DoubleLinkList
 {
 private:
     Node *head;
 
 public:
-    DoublyLinkList()
+    DoubleLinkList()
     {
         head = nullptr;
     }
 
-    // 添加结点到双链表
-    void appendNode(int value)
+    void CreateNode(int value)
     {
         Node *p = new Node;
         p->data = value;
@@ -43,24 +42,11 @@ public:
         }
     }
 
-    // 获取双链表中的结点数量
-    int getNodeCount()
-    {
-        int count = 0;
-        Node *temp = head;
-        while (temp != nullptr)
-        {
-            count++;
-            temp = temp->next;
-        }
-        return count;
-    }
-
     void swapLastTwoNodes()
     {
         if (head == nullptr || head->next == nullptr)
         {
-            std::cout << "双链表结点数量不足，无法进行交换操作" << std::endl;
+            cout << "双链表结点数量不足，无法进行交换操作" << endl;
             return;
         }
 
@@ -92,14 +78,14 @@ public:
             tempPrev->next = last;
         }
     }
-    
+
     void printList()
     {
-        Node *current = head;
-        while (current != nullptr)
+        Node *p = head;
+        while (p != nullptr)
         {
-            cout << current->data << " ";
-            current = current->next;
+            cout << p->data << " ";
+            p = p->next;
         }
         cout << endl;
     }
@@ -107,14 +93,11 @@ public:
 
 int main()
 {
-    DoublyLinkList L;
-    L.appendNode(1);
-    L.appendNode(2);
-    L.appendNode(3);
-
-    cout << "双链表中的结点数量: " << L.getNodeCount() << endl;
+    DoubleLinkList L;
+    L.CreateNode(1);
+    L.CreateNode(2);
+    L.CreateNode(3);
     L.printList();
-
     L.swapLastTwoNodes();
     cout << "交换后的双链表: ";
     L.printList();
