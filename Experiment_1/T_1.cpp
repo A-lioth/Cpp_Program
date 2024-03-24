@@ -58,7 +58,7 @@ LinkList *CreateLinkList(LinkList *head)
         cin >> p->data;
         LinkList *prev = head;
         LinkList *current = head->next;
-        while (current != NULL && current->data < p->data)
+        while (current != nullptr && current->data < p->data)
         {
             prev = current;
             current = current->next;
@@ -72,7 +72,7 @@ LinkList *CreateLinkList(LinkList *head)
 void OutputLinkList(LinkList *head)
 {
     LinkList *p = head;
-    while (p != NULL)
+    while (p != nullptr)
     {
         cout << p->next->data << " ";
         p = p->next;
@@ -83,12 +83,12 @@ void OutputLinkList(LinkList *head)
 // T_3
 int IsOrdered(LinkList *head)
 {
-    if (head == NULL || head->next == NULL)
+    if (head == nullptr || head->next == nullptr)
     {
         return 0;
     }
     LinkList *p = head->next;
-    while (p != NULL && p->next != NULL)
+    while (p != nullptr && p->next != nullptr)
     {
         if (p->data > p->next->data)
             return -1;
@@ -106,7 +106,7 @@ int main()
     // T_2
     LinkList L2;
     LinkList *head = new LinkList;
-    head->next = NULL;
+    head->next = nullptr;
     head->data = 0;
     CreateLinkList(head);
     // OutputLinkList(head);
