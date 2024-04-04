@@ -15,13 +15,13 @@ private:
 public:
     LinkStack()
     {
-        top = NULL;
+        top = nullptr;
     };
 
     ~LinkStack()
     {
 
-        while (top != NULL)
+        while (top != nullptr)
         {
             Node *temp = top;
             top = top->next;
@@ -31,7 +31,7 @@ public:
 
     bool isEmpty()
     {
-        return (top == NULL) ? true : false;
+        return (top == nullptr) ? true : false;
     };
 
     void push(int data)
@@ -69,7 +69,7 @@ public:
     void Output()
     {
         Node *temp = top;
-        while (temp != NULL)
+        while (temp != nullptr)
         {
             cout << temp->data << " ";
             temp = temp->next;
@@ -81,7 +81,7 @@ public:
     {
         int size = 0;
         Node *temp = top;
-        while (temp != NULL)
+        while (temp != nullptr)
         {
             size++;
             temp = temp->next;

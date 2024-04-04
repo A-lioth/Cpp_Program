@@ -23,14 +23,14 @@ public:
         con.head = new Node;
         con.head->name = "";
         con.head->phone = "";
-        con.head->next = NULL;
+        con.head->next = nullptr;
         con.count = 0;
     }
 
     void Display(Contact &con)
     {
         Node *temp = con.head->next;
-        while (temp != NULL)
+        while (temp != nullptr)
         {
             cout << "Name: " << temp->name << endl;
             cout << " Phone: " << temp->phone << endl;
@@ -52,13 +52,13 @@ public:
     void Delete(Contact &con, string name)
     {
         Node *temp = con.head;
-        Node *prev = NULL;
-        while (temp != NULL && temp->name != name)
+        Node *prev = nullptr;
+        while (temp != nullptr && temp->name != name)
         {
             prev = temp;
             temp = temp->next;
         }
-        if (temp == NULL)
+        if (temp == nullptr)
         {
             cout << "Contact not found." << endl;
             return;
@@ -72,11 +72,11 @@ public:
     void Search(Contact &con, string name)
     {
         Node *temp = con.head->next;
-        while (temp != NULL && temp->name != name)
+        while (temp != nullptr && temp->name != name)
         {
             temp = temp->next;
         }
-        if (temp == NULL)
+        if (temp == nullptr)
         {
             cout << "Contact not found." << endl;
             return;
@@ -87,7 +87,7 @@ public:
     void Destroy(Contact &con)
     {
         Node *temp = con.head;
-        while (temp != NULL)
+        while (temp != nullptr)
         {
             Node *next = temp->next;
             delete temp;

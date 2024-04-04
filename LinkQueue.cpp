@@ -15,7 +15,7 @@ private:
 public:
     LinkQueue()
     {
-        front = rear = NULL;
+        front = rear = nullptr;
     }
 
     bool isEmpty()
@@ -27,14 +27,12 @@ public:
     {
         Node *s = new Node;
         s->data = val;
-        s->next = NULL;
-
-        if (rear == NULL)
+        s->next = nullptr;
+        if (rear == nullptr)
         {
             front = rear = s;
             return;
         }
-
         rear->next = s;
         rear = s;
     }
@@ -46,19 +44,17 @@ public:
             cout << "Queue is empty" << endl;
             return -1;
         }
-        
         int val = front->data;
         Node *p = front;
         front = front->next;
         delete p;
         return val;
-        
     }
 
     void Output()
     {
         Node *p = front;
-        while (p!= NULL)
+        while (p != nullptr)
         {
             cout << p->data << " ";
             p = p->next;
@@ -70,7 +66,7 @@ public:
     {
         int size = 0;
         Node *p = front;
-        while (p!= NULL)
+        while (p != nullptr)
         {
             size++;
             p = p->next;
@@ -81,15 +77,15 @@ public:
     ~LinkQueue()
     {
         Node *p = front;
-        while (p!= NULL)
+        while (p != nullptr)
         {
             Node *q = p;
             p = p->next;
             delete q;
         }
     }
-   
-   void Menu()
+
+    void Menu()
     {
         int choice;
         do
@@ -101,7 +97,6 @@ public:
             cout << "5. Exit" << endl;
             cout << "Enter your choice: ";
             cin >> choice;
-
             switch (choice)
             {
             case 1:
@@ -115,7 +110,7 @@ public:
             case 2:
             {
                 int val = DeQueue();
-                if (val!= -1)
+                if (val != -1)
                 {
                     cout << "Dequeued value: " << val << endl;
                 }
@@ -142,9 +137,8 @@ public:
                 break;
             }
             }
-        } while (choice!= 5);
+        } while (choice != 5);
     }
-    
 };
 
 int main()
