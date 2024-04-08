@@ -1,7 +1,7 @@
-#include "employee.h"
+#include "manager.h"
 
 // 构造函数
-Employee::Employee(int id, string name, int department_id)
+Manager::Manager(int id, string name, int department_id)
 {
     this->id = id;
     this->name = name;
@@ -9,7 +9,7 @@ Employee::Employee(int id, string name, int department_id)
 }
 
 // 显示信息
-void Employee::showInfo()
+void Manager::showInfo()
 {
     cout << "员工编号：" << this->id
          << "\t员工姓名：" << this->name
@@ -17,7 +17,7 @@ void Employee::showInfo()
 }
 
 // 获取部门名称
-string Employee::getDepartmentName()
+string Manager::getDepartmentName()
 {
-    return string("员工");
+    return string("经理");
 }

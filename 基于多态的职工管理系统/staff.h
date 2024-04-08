@@ -3,17 +3,17 @@
 #include <iostream>
 using namespace std;
 
-// Ö°¹¤Àà
-class Staff 
+// èŒå·¥ç±»
+class Staff
 {
 public:
-    // Ğéº¯Êı£¬ÏÔÊ¾Ö°¹¤ĞÅÏ¢
-    virtual void showInfo() = 0; 
+    // è™šå‡½æ•°ï¼Œæ˜¾ç¤ºèŒå·¥ä¿¡æ¯
+    virtual void showInfo() = 0;
 
-    // Ğéº¯Êı£¬»ñÈ¡²¿ÃÅÃû³Æ
-    virtual string getDepartmentName() = 0; 
+    // è™šå‡½æ•°ï¼Œè·å–éƒ¨é—¨åç§°
+    virtual string getDepartmentName() = 0;
 
-    int id; // Ö°¹¤±àºÅ
-    string name; // Ö°¹¤ĞÕÃû
-    string department_id; // ²¿ÃÅ±àºÅ
+    int id;               // èŒå·¥ç¼–å·
+    string name;          // èŒå·¥å§“å
+    string department_id; // éƒ¨é—¨ç¼–å·
 };

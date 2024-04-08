@@ -3,15 +3,15 @@
 #include "staff.h"
 using namespace std;
 
-class Employee : public Staff
+class Boss : public Staff
 {
 public:
-    // 构造函数
-    Employee(int id, string name, int department_id);
+    // 经理类构造函数
+    Boss(int id, string name, int department_id);
 
-    // 显示员工信息
+    // 显示经理信息
     virtual void showInfo();
 
-    // 获取部门名称`
+    // 获取部门名称
     virtual string getDepartmentName();
 };

@@ -1,23 +1,34 @@
 #pragma once
 #include <iostream>
-#include <string>
-
+#include "staff.h"
+#include "manager.h"
+#include "employee.h"
+#include "boss.h"
 using namespace std;
 
 class StaffManager
 {
 public:
-    //¹¹Ôìº¯Êı
+    // æ„é€ å‡½æ•°
     StaffManager();
-    
-    //²Ëµ¥
+
+    // èœå•
     void Menu();
 
-    //ÍË³ö³ÌĞò
+    // è®°å½•å‘˜å·¥äººæ•°
+    int EmployeeCount;
+
+    // å‘˜å·¥æ•°ç»„æŒ‡é’ˆ
+    Staff **StaffArray;
+
+    // æ·»åŠ å‘˜å·¥
+    void AddEmployee();
+
+
+
+    // é€€å‡ºç¨‹åº
     void Exit();
 
-
-    //Îö¹¹º¯Êı
+    // ææ„å‡½æ•°
     ~StaffManager();
-
 };
