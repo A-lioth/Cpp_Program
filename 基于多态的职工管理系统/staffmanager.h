@@ -5,6 +5,10 @@
 #include "employee.h"
 #include "boss.h"
 using namespace std;
+#include <fstream>
+
+
+#define FILENAME "stafffile.txt"
 
 class StaffManager
 {
@@ -24,7 +28,17 @@ public:
     // 添加员工
     void AddEmployee();
 
+    //保存员工信息到文件
+    void Save();
 
+    // 判断文件是否为空
+    bool IsEmpty;
+
+    // 获取员工人数
+    int getEmployeeCount();
+
+    // 初始化
+    void Init();
 
     // 退出程序
     void Exit();

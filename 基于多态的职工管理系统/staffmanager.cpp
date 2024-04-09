@@ -2,8 +2,44 @@
 
 StaffManager::StaffManager()
 {
-    this->EmployeeCount = 0;
-    this->StaffArray = nullptr;
+    // 文件不存在则创建
+    ifstream ifs;
+    ifs.open(FILENAME, ios::in);
+
+    if (!ifs.is_open())
+    {
+        cout << "StaffManager file not found. " << endl;
+        this->EmployeeCount = 0;
+        this->StaffArray = nullptr;
+        this->IsEmpty = true;
+        ifs.close();
+        return;
+    }
+
+    // 文件为空则提示
+    char ch;
+    ifs >> ch;
+    if (ifs.eof())
+    {
+        cout << "StaffManager file is empty. " << endl;
+        this->EmployeeCount = 0;
+        this->StaffArray = nullptr;
+        this->IsEmpty = true;
+        ifs.close();
+        return;
+    }
+
+    // 文件存在且不为空
+    this->EmployeeCount = this->getEmployeeCount();
+    cout << "the number of staffs: " << this->EmployeeCount << endl;
+
+    // cout << "the number of staffs: " << EmployeeCount << endl;
+
+    //
+    this->StaffArray = new Staff *[this->EmployeeCount];
+    this->Init();
+    this->IsEmpty = false;
+    ifs.close();
 }
 
 void StaffManager::Menu()
@@ -97,10 +133,104 @@ void StaffManager::AddEmployee()
 
         // 更新员工数量
         this->EmployeeCount += num;
+        this->IsEmpty = false;
         cout << "Added " << num << " employees." << endl;
+
+        // 保存员工信息到文件
+        this->Save();
     }
+
     system("pause");
     system("cls");
+}
+
+void StaffManager::Save()
+{
+    ofstream ofs;
+    ofs.open(FILENAME, ios::out);
+
+    if (ofs.is_open())
+    {
+        ofs << this->EmployeeCount << endl;
+        for (int i = 0; i < this->EmployeeCount; i++)
+        {
+            ofs << this->StaffArray[i]->id << " "
+                << this->StaffArray[i]->name << " "
+                << this->StaffArray[i]->department_id << endl;
+        }
+    }
+    ofs.close();
+}
+
+int StaffManager::getEmployeeCount()
+{
+    ifstream ifs;
+    ifs.open(FILENAME, ios::in);
+    int id = 0;
+    string name;
+    int department_id = 0;
+    /*while (ifs >> id && ifs >> name && ifs >> department_id)
+    {
+        this->EmployeeCount++;
+    }
+    ifs.close();
+    return this->EmployeeCount;*/
+
+    int count = 0;
+    while (ifs >> id >> name >> department_id)
+    {
+        count++;
+    }
+    ifs.close();
+    return count;
+}
+
+void StaffManager::Init()
+{
+    ifstream ifs;
+    ifs.open(FILENAME, ios::in);
+
+    int id = 0;
+    string name;
+    int department_id = 0;
+    int index = 0;
+    // 读取员工信息
+    while (ifs >> id >> name >> department_id)
+    {
+        Staff *staff = nullptr;
+        switch (department_id)
+        {
+        case 1:
+        {
+            staff = new Employee(id, name, department_id);
+            break;
+        }
+
+        case 2:
+        {
+            staff = new Manager(id, name, department_id);
+            break;
+        }
+
+        case 3:
+        {
+            staff = new Boss(id, name, department_id);
+            break;
+        }
+
+        default:
+        {
+            cout << "Invalid department ID. Please enter a valid ID." << endl;
+            break;
+        }
+            // 向员工数组中添加员工
+            // this->StaffArray[this->EmployeeCount] = staff;
+            // this->EmployeeCount++;
+            this->StaffArray[index] = staff;
+            index++;
+        }
+        ifs.close();
+    }
 }
 
 void StaffManager::Exit()
@@ -112,4 +242,9 @@ void StaffManager::Exit()
 
 StaffManager::~StaffManager()
 {
+    if (this->StaffArray != nullptr)
+    {
+        delete[] this->StaffArray;
+        this->StaffArray = nullptr;
+    }
 }
