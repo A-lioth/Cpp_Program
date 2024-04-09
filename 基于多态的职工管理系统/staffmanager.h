@@ -40,6 +40,27 @@ public:
     // 初始化
     void Init();
 
+    // 显示所有员工信息
+    void Show();
+
+    // 删除员工
+    void Delete();
+
+    // 判断是否存在员工
+    int isExist(int id);
+
+    // 修改员工信息
+    void Modify();
+
+    // 搜索员工
+    void Search();
+
+    // 排序员工
+    void Sort();
+
+    //
+    void Clear();
+
     // 退出程序
     void Exit();
 
