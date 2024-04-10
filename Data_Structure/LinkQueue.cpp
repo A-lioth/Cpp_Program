@@ -20,7 +20,7 @@ public:
 
     bool isEmpty()
     {
-        return (front == rear) ? true : false;
+        return (front == rear);
     }
 
     void EnQueue(int val)
@@ -109,11 +109,7 @@ public:
             }
             case 2:
             {
-                int val = DeQueue();
-                if (val != -1)
-                {
-                    cout << "Dequeued value: " << val << endl;
-                }
+                cout << "Dequeued value: " << DeQueue() << endl;
                 break;
             }
             case 3:
