@@ -9,14 +9,12 @@ class SeqStack
 {
 private:
     int *arr;
-    int *parkTime;
     int top;
 
 public:
     SeqStack()
     {
         arr = new int[parkMax];
-        parkTime = new int[parkMax];
         top = -1;
     }
 
@@ -34,9 +32,9 @@ public:
         cout << endl;
     }
 
-    void getSize()
+    int getSize()
     {
-        cout << "Size of stack: " << top + 1 << endl;
+        return top + 1;
     }
 
     bool IsEmpty()
@@ -81,7 +79,6 @@ public:
     {
         top = -1;
         delete[] arr;
-        delete[] parkTime;
         cout << "Stack is destroyed!" << endl;
     }
 
@@ -121,7 +118,7 @@ public:
             }
             case 4:
             {
-                getSize();
+                cout << "Size of stack: " << getSize() << endl;
                 break;
             }
             case 5:
@@ -298,8 +295,10 @@ private:
     SeqStack *parkStack;
     SeqStack *waitStack;
     LinkQueue *waitQueue;
-    CarInfo c;
+    CarInfo carPark;
+    CarInfo carWait;
     int parkCount;
+    int waitCount;
 
 public:
     ParkingLot()
@@ -309,15 +308,18 @@ public:
         waitQueue = new LinkQueue;
         for (int i = 0; i < parkMax; i++)
         {
-            c.carId[i] = -1;
-            c.carTime[i] = -1;
+            carPark.carId[i] = -1;
+            carPark.carTime[i] = -1;
+            carWait.carId[i] = -1;
+            carWait.carTime[i] = -1;
         }
         parkCount = 0;
+        waitCount = 0;
     }
 
     bool parkisFull()
     {
-        return (parkCount == parkMax);
+        return (parkStack->getSize() == parkMax);
     }
 
     bool waitisFull()
@@ -331,14 +333,17 @@ public:
         if (!parkisFull())
         {
             parkStack->Push(carId);
-            c.carId[parkCount] = carId;
-            c.carTime[parkCount] = carTime;
+            carPark.carId[parkStack->getSize() - 1] = carId;
+            carPark.carTime[parkStack->getSize() - 1] = carTime;
             parkCount++;
         }
         // 停车场满，候车厂没满
         else if (!waitisFull())
         {
             waitQueue->EnQueue(carId);
+            carWait.carId[waitQueue->getSize() - 1] = carId;
+            carWait.carTime[waitQueue->getSize() - 1] = carTime;
+            waitCount++;
         }
         // 停车场满，候车厂满
         else
@@ -358,18 +363,30 @@ public:
         // 停车场有车且最后一辆车是最后停车的车
         if (carId == parkStack->getTop())
         {
+            // waitQueue->Output();
+            // cout << "waitQueue size: " << waitQueue->getSize() << endl;
             parkStack->Pop();
-            parkCount--;
+            // cout << parkStack->getSize() << endl;
+            // parkStack->Outout();
+            carPark.carId[parkStack->getSize()] = -1;
+            carPark.carTime[parkStack->getSize()] = -1;
             cout << "Car " << carId << " has left the parking lot." << endl;
+            // parkStack->Outout();
             putwaitQueuetoparkStack();
+            /*
+            for (int i = 0; i < parkMax; i++)
+            {
+                cout << "carId: " << carPark.carId[i] << " carTime: " << carPark.carTime[i] << endl;
+            }
+            */
         }
         // 停车场有车但不是最后一辆车
         else
         {
             int index = -1;
-            for (int i = 0; i < parkCount; i++)
+            for (int i = 0; i < parkStack->getSize(); i++)
             {
-                if (c.carId[i] == carId)
+                if (carPark.carId[i] == carId)
                 {
                     index = i;
                     break;
@@ -381,14 +398,14 @@ public:
                 return;
             }
             // 将parkStack中从index开始的车暂时放入waitStack
-            for (int i = index; i < parkCount - 1; i++)
+            for (int i = index; i < parkStack->getSize() - index; i++)
             {
-                waitStack->Push(c.carId[i]);
-                c.carId[i] = -1;
-                c.carTime[i] = -1;
+                waitStack->Push(parkStack->Pop());
+                parkCount--;
             }
             parkStack->Pop();
-            parkCount--;
+            carPark.carId[parkStack->getSize()] = -1;
+            carPark.carTime[parkStack->getSize()] = -1;
             cout << "Car " << carId << " has left the parking lot." << endl;
             // 将waitStack中的车放回parkStack
             for (int i = 0; !waitStack->IsEmpty(); i++)
@@ -401,23 +418,22 @@ public:
         }
     }
 
-    // 将空位后面的车前移
-    void moveCar(int index)
-    {
-        for (int i = index; i < parkCount - 1; i++)
-        {
-            c.carId[i] = c.carId[i + 1];
-            c.carTime[i] = c.carTime[i + 1];
-        }
-        c.carId[parkCount - 1] = -1;
-        c.carTime[parkCount - 1] = -1;
-    }
-
     void putwaitQueuetoparkStack()
     {
-        while (!parkisFull() && !waitQueue->isEmpty())
+        for (int i = 0, j = 0; !parkisFull() || !waitQueue->isEmpty(); i++)
         {
-            parkStack->Push(waitQueue->DeQueue());
+            if (carPark.carId[i] == -1)
+            {
+                parkStack->Push(waitQueue->DeQueue());
+                parkStack->Outout();
+                carPark.carId[i] = carWait.carId[j];
+                carPark.carTime[i] = carWait.carTime[j];
+                carWait.carId[j] = carWait.carId[j + 1];
+                carWait.carTime[j] = carWait.carTime[j + 1];
+                j++;
+            }
+            carWait.carId[waitQueue->getSize()] = -1;
+            carWait.carTime[waitQueue->getSize()] = -1;
         }
     }
 
@@ -427,9 +443,9 @@ public:
         bool carExists = false;
         for (int i = 0; i < parkCount; i++)
         {
-            if (c.carId[i] == carId)
+            if (carPark.carId[i] == carId)
             {
-                price = unitPrice * c.carTime[i];
+                price = unitPrice * carPark.carTime[i];
                 carExists = true;
                 break;
             }
@@ -440,6 +456,14 @@ public:
             return -1;
         }
         return price;
+    }
+
+    ~ParkingLot()
+    {
+        delete parkStack;
+        delete waitStack;
+        delete waitQueue;
+        cout << "Parking lot is destroyed!" << endl;
     }
 
     void Menu()
