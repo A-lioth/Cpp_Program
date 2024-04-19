@@ -101,7 +101,8 @@ public:
                 EnQueue(value);
                 break;
             case 2:
-                cout << "Dequeued value: " << DeQueue() << endl;
+                if (DeQueue() != -1)
+                    cout << "Dequeued value: " << DeQueue() << endl;
                 break;
             case 3:
                 Output();
