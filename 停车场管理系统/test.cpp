@@ -288,6 +288,8 @@ private:
     SeqQueue *waitTimeQueue;
     int parkCount;
     int waitCount;
+    int carId;
+    int carTime;
 
 public:
     ParkingLot()
@@ -483,7 +485,6 @@ public:
             {
             case 1:
             {
-                int carId, carTime;
                 cout << "Enter car ID: ";
                 cin >> carId;
                 cout << "Enter car time: ";
@@ -493,7 +494,6 @@ public:
             }
             case 2:
             {
-                int carId;
                 cout << "Enter car ID: ";
                 cin >> carId;
                 Leave(carId);
