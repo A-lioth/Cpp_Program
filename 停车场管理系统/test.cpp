@@ -1,8 +1,8 @@
 #include <iostream>
 using namespace std;
 
-const int parkMax = 2;
-const int waitMax = 2;
+const int parkMax = 3;
+const int waitMax = 4;
 const int unitPrice = 5;
 
 class SeqStack
@@ -18,7 +18,7 @@ public:
         top = -1;
     }
 
-    void Outout()
+    void Output()
     {
         if (top == -1)
         {
@@ -30,6 +30,23 @@ public:
             cout << arr[i] << " ";
         }
         cout << endl;
+    }
+
+    bool isElemExist(int val)
+    {
+        for (int i = 0; i <= top; i++)
+        {
+            if (arr[i] == val)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool isFull()
+    {
+        return (top == parkMax - 1);
     }
 
     int getSize()
@@ -44,7 +61,7 @@ public:
 
     void Push(int val)
     {
-        if (top == parkMax - 1)
+        if (isFull())
         {
             cout << "Stack is full!" << endl;
             return;
@@ -79,6 +96,7 @@ public:
     {
         top = -1;
         delete[] arr;
+        arr = nullptr;
         cout << "Stack is destroyed!" << endl;
     }
 
@@ -123,7 +141,7 @@ public:
             }
             case 5:
             {
-                Outout();
+                Output();
                 break;
             }
             case 6:
@@ -145,21 +163,18 @@ public:
     }
 };
 
-struct Node
-{
-    int data;
-    Node *next;
-};
-
-class LinkQueue
+class SeqQueue
 {
 private:
-    Node *front, *rear;
+    int *arr;
+    int front, rear;
 
 public:
-    LinkQueue()
+    SeqQueue()
     {
-        front = rear = nullptr;
+        arr = new int[waitMax];
+        front = 0;
+        rear = 0;
     }
 
     bool isEmpty()
@@ -167,18 +182,20 @@ public:
         return (front == rear);
     }
 
-    void EnQueue(int val)
+    bool isFull()
     {
-        Node *s = new Node;
-        s->data = val;
-        s->next = nullptr;
-        if (rear == nullptr)
+        return ((rear + 1) % waitMax == front);
+    }
+
+    void EnQueue(int value)
+    {
+        if (isFull())
         {
-            front = rear = s;
+            cout << "Queue is full" << endl;
             return;
         }
-        rear->next = s;
-        rear = s;
+        arr[rear] = value;
+        rear = (rear + 1) % waitMax;
     }
 
     int DeQueue()
@@ -188,46 +205,36 @@ public:
             cout << "Queue is empty" << endl;
             return -1;
         }
-        int val = front->data;
-        Node *p = front;
-        front = front->next;
-        delete p;
-        return val;
+        int value = arr[front];
+        front = (front + 1) % waitMax;
+        return value;
     }
 
     void Output()
     {
-        Node *p = front;
-        while (p != nullptr)
+        if (isEmpty())
         {
-            cout << p->data << " ";
-            p = p->next;
+            cout << "Queue is empty" << endl;
+            return;
+        }
+        for (int i = front; i < rear; i++)
+        {
+            cout << arr[i] << " ";
         }
         cout << endl;
     }
 
     int getSize()
     {
-        int size = 0;
-        Node *p = front;
-        while (p != nullptr)
-        {
-            size++;
-            p = p->next;
-        }
-        return size;
+        return (rear - front + waitMax) % waitMax;
     }
 
-    ~LinkQueue()
+    ~SeqQueue()
     {
-        Node *p = front;
-        while (p != nullptr)
-        {
-            Node *q = p;
-            p = p->next;
-            delete q;
-        }
-        front = rear = nullptr;
+        front = 0;
+        rear = 0;
+        delete[] arr;
+        arr = nullptr;
         cout << "Queue is destroyed!" << endl;
     }
 
@@ -246,103 +253,92 @@ public:
             switch (choice)
             {
             case 1:
-            {
-                int val;
+                int value;
                 cout << "Enter value to enqueue: ";
-                cin >> val;
-                EnQueue(val);
+                cin >> value;
+                EnQueue(value);
                 break;
-            }
             case 2:
-            {
                 cout << "Dequeued value: " << DeQueue() << endl;
                 break;
-            }
             case 3:
-            {
                 Output();
                 break;
-            }
             case 4:
-            {
                 cout << "Size of queue: " << getSize() << endl;
                 break;
-            }
             case 5:
-            {
                 cout << "Exiting..." << endl;
                 break;
-            }
             default:
-            {
                 cout << "Invalid choice" << endl;
-                break;
-            }
             }
         } while (choice != 5);
     }
 };
 
-struct CarInfo
-{
-    int carId[parkMax];
-    int carTime[parkMax];
-};
-
 class ParkingLot
 {
 private:
-    SeqStack *parkStack;
-    SeqStack *waitStack;
-    LinkQueue *waitQueue;
-    CarInfo carPark;
-    CarInfo carWait;
+    SeqStack *parkIdStack;
+    SeqStack *parkTimeStack;
+    SeqStack *waitIdStack;
+    SeqStack *waitTimeStack;
+    SeqQueue *waitIdQueue;
+    SeqQueue *waitTimeQueue;
     int parkCount;
     int waitCount;
 
 public:
     ParkingLot()
     {
-        parkStack = new SeqStack;
-        waitStack = new SeqStack;
-        waitQueue = new LinkQueue;
-        for (int i = 0; i < parkMax; i++)
-        {
-            carPark.carId[i] = -1;
-            carPark.carTime[i] = -1;
-            carWait.carId[i] = -1;
-            carWait.carTime[i] = -1;
-        }
+        parkIdStack = new SeqStack;
+        parkTimeStack = new SeqStack;
+        waitIdStack = new SeqStack;
+        waitTimeStack = new SeqStack;
+        waitIdQueue = new SeqQueue;
+        waitTimeQueue = new SeqQueue;
         parkCount = 0;
         waitCount = 0;
     }
 
-    bool parkisFull()
+    bool parkIsFull()
     {
-        return (parkStack->getSize() == parkMax);
+        return (parkCount == parkMax);
     }
 
-    bool waitisFull()
+    bool waitIsFull()
     {
-        return (waitQueue->getSize() == waitMax);
+        return (waitCount == waitMax);
+    }
+
+    bool isCarInParkingLot(int carId)
+    {
+        if (parkIdStack->isElemExist(carId))
+        {
+            cout << "Car " << carId << " is in parking lot!" << endl;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     void Park(int carId, int carTime)
     {
-        // 停车场没满
-        if (!parkisFull())
+        // 停车场没满且没有重复的车
+        if (!parkIsFull() && !isCarInParkingLot(carId))
         {
-            parkStack->Push(carId);
-            carPark.carId[parkStack->getSize() - 1] = carId;
-            carPark.carTime[parkStack->getSize() - 1] = carTime;
+            parkIdStack->Push(carId);
+            parkTimeStack->Push(carTime);
             parkCount++;
         }
         // 停车场满，候车厂没满
-        else if (!waitisFull())
+        else if (!waitIsFull())
         {
-            waitQueue->EnQueue(carId);
-            carWait.carId[waitQueue->getSize() - 1] = carId;
-            carWait.carTime[waitQueue->getSize() - 1] = carTime;
+            waitIdQueue->EnQueue(carId);
+            waitTimeQueue->EnQueue(carTime);
             waitCount++;
         }
         // 停车场满，候车厂满
@@ -354,115 +350,119 @@ public:
 
     void Leave(int carId)
     {
-        // 停车场没车
-        if (parkStack->IsEmpty())
+        if (parkIdStack->isElemExist(carId))
         {
-            cout << "No car in parking lot!" << endl;
-            return;
-        }
-        // 停车场有车且最后一辆车是最后停车的车
-        if (carId == parkStack->getTop())
-        {
-            // waitQueue->Output();
-            // cout << "waitQueue size: " << waitQueue->getSize() << endl;
-            parkStack->Pop();
-            // cout << parkStack->getSize() << endl;
-            // parkStack->Outout();
-            carPark.carId[parkStack->getSize()] = -1;
-            carPark.carTime[parkStack->getSize()] = -1;
-            cout << "Car " << carId << " has left the parking lot." << endl;
-            // parkStack->Outout();
-            putwaitQueuetoparkStack();
-            /*
-            for (int i = 0; i < parkMax; i++)
+            // 停车场没车
+            if (parkIdStack->IsEmpty())
             {
-                cout << "carId: " << carPark.carId[i] << " carTime: " << carPark.carTime[i] << endl;
-            }
-            */
-        }
-        // 停车场有车但不是最后一辆车
-        else
-        {
-            int index = -1;
-            for (int i = 0; i < parkStack->getSize(); i++)
-            {
-                if (carPark.carId[i] == carId)
-                {
-                    index = i;
-                    break;
-                }
-            }
-            if (index == -1)
-            {
-                cout << "Car " << carId << " is not in the parking lot!" << endl;
+                cout << "No car in parking lot!" << endl;
                 return;
             }
-            // 将parkStack中从index开始的车暂时放入waitStack
-            for (int i = index; i < parkStack->getSize() - index; i++)
+            // 停车场有车且最后一辆车是最后停车的车
+            if (carId == parkIdStack->getTop())
             {
-                waitStack->Push(parkStack->Pop());
+                parkPrice(parkIdStack->Pop(), parkTimeStack->Pop());
                 parkCount--;
+                cout << "Car " << carId << " leaves the parking lot." << endl;
+                putwaitQueuetoparkStack();
             }
-            parkStack->Pop();
-            carPark.carId[parkStack->getSize()] = -1;
-            carPark.carTime[parkStack->getSize()] = -1;
-            cout << "Car " << carId << " has left the parking lot." << endl;
-            // 将waitStack中的车放回parkStack
-            for (int i = 0; !waitStack->IsEmpty(); i++)
+            // 停车场有车但不是最后一辆车
+            else
             {
-                parkStack->Push(waitStack->Pop());
+                int count = 0;
+                while (parkIdStack->getTop() != carId)
+                {
+                    waitIdStack->Push(parkIdStack->Pop());
+                    waitTimeStack->Push(parkTimeStack->Pop());
+                    parkCount--;
+                    count++;
+                }
+                parkPrice(parkIdStack->Pop(), parkTimeStack->Pop());
+                parkCount--;
+                cout << "Car " << carId << " leaves the parking lot." << endl;
+                while (count > 0)
+                {
+                    parkIdStack->Push(waitIdStack->Pop());
+                    parkTimeStack->Push(waitTimeStack->Pop());
+                    parkCount++;
+                    count--;
+                }
+                putwaitQueuetoparkStack();
             }
-            // 将parkStack中后面的车前移
-            // moveCar(index);
-            putwaitQueuetoparkStack();
+        }
+        else
+        {
+            cout << "Car " << carId << " is not in parking lot!" << endl;
         }
     }
 
     void putwaitQueuetoparkStack()
     {
-        for (int i = 0, j = 0; !parkisFull() || !waitQueue->isEmpty(); i++)
+        if (waitCount > 0)
         {
-            if (carPark.carId[i] == -1)
-            {
-                parkStack->Push(waitQueue->DeQueue());
-                parkStack->Outout();
-                carPark.carId[i] = carWait.carId[j];
-                carPark.carTime[i] = carWait.carTime[j];
-                carWait.carId[j] = carWait.carId[j + 1];
-                carWait.carTime[j] = carWait.carTime[j + 1];
-                j++;
-            }
-            carWait.carId[waitQueue->getSize()] = -1;
-            carWait.carTime[waitQueue->getSize()] = -1;
+            parkIdStack->Push(waitIdQueue->DeQueue());
+            parkTimeStack->Push(waitTimeQueue->DeQueue());
+            parkCount++;
+            waitCount--;
         }
     }
 
-    int parkPrice(int carId)
+    void parkPrice(int carId, int carTime)
     {
-        int price = 0;
-        bool carExists = false;
-        for (int i = 0; i < parkCount; i++)
+        // if (parkIdStack->isElemExist(carId))
         {
-            if (carPark.carId[i] == carId)
-            {
-                price = unitPrice * carPark.carTime[i];
-                carExists = true;
-                break;
-            }
+            cout << "Car " << carId << " parking price: " << carTime * unitPrice << " yuan." << endl;
         }
-        if (!carExists)
+        // else
         {
-            cout << "Car " << carId << " is not in the parking lot!" << endl;
-            return -1;
+            return;
         }
-        return price;
+    }
+
+    void showParkingLot()
+    {
+        if (parkCount < 1)
+        {
+            cout << "No car in parking lot!" << endl;
+            return;
+        }
+        cout << "Parking lot status:" << endl;
+        cout << "Parking lot ID: ";
+        parkIdStack->Output();
+        cout << "Parking lot time: ";
+        parkTimeStack->Output();
+    }
+
+    void showWaitLot()
+    {
+        if (waitCount < 1)
+        {
+            cout << "No car in waiting lot!" << endl;
+            return;
+        }
+        cout << "Wait lot status:" << endl;
+        cout << "Wait lot ID: ";
+        waitIdQueue->Output();
+        cout << "Wait lot time: ";
+        waitTimeQueue->Output();
     }
 
     ~ParkingLot()
     {
-        delete parkStack;
-        delete waitStack;
-        delete waitQueue;
+        delete parkIdStack;
+        delete parkTimeStack;
+        delete waitIdStack;
+        delete waitTimeStack;
+        delete waitIdQueue;
+        delete waitTimeQueue;
+        parkCount = 0;
+        waitCount = 0;
+        parkIdStack = nullptr;
+        parkTimeStack = nullptr;
+        waitIdStack = nullptr;
+        waitTimeStack = nullptr;
+        waitIdQueue = nullptr;
+        waitTimeQueue = nullptr;
         cout << "Parking lot is destroyed!" << endl;
     }
 
@@ -473,7 +473,10 @@ public:
         {
             cout << "1. Park" << endl;
             cout << "2. Leave" << endl;
-            cout << "3. Exit" << endl;
+            cout << "3. Parking lot status" << endl;
+            cout << "4. Wait lot status" << endl;
+            cout << "5. Exit" << endl;
+
             cout << "Enter your choice: ";
             cin >> choice;
             switch (choice)
@@ -493,14 +496,20 @@ public:
                 int carId;
                 cout << "Enter car ID: ";
                 cin >> carId;
-                if (parkPrice(carId) != -1)
-                {
-                    cout << "Car " << carId << " pays " << parkPrice(carId) << " yuan." << endl;
-                }
                 Leave(carId);
                 break;
             }
             case 3:
+            {
+                showParkingLot();
+                break;
+            }
+            case 4:
+            {
+                showWaitLot();
+                break;
+            }
+            case 5:
             {
                 cout << "Exiting..." << endl;
                 break;
@@ -511,7 +520,7 @@ public:
                 break;
             }
             }
-        } while (choice != 3);
+        } while (choice != 5);
     }
 };
 
