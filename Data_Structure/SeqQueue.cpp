@@ -3,33 +3,27 @@ using namespace std;
 
 const int MAXSIZE = 100;
 
-struct Node
-{
-    int front, rear;
-    int data[MAXSIZE];
-};
-
 class SeqQueue
 {
 private:
-    Node *arr;
+    int *arr;
+    int front, rear;
 
 public:
     SeqQueue()
     {
-        arr = new Node;
-        arr->front = 0;
-        arr->rear = 0;
+        arr = new int[MAXSIZE];
+        front = rear = 0;
     }
 
     bool isEmpty()
     {
-        return (arr->front == arr->rear);
+        return (front == rear);
     }
 
     bool isFull()
     {
-        return ((arr->rear + 1) % MAXSIZE == arr->front);
+        return ((rear + 1) % MAXSIZE == front);
     }
 
     void EnQueue(int value)
@@ -39,8 +33,8 @@ public:
             cout << "Queue is full" << endl;
             return;
         }
-        arr->data[arr->rear] = value;
-        arr->rear = (arr->rear + 1) % MAXSIZE;
+        arr[rear] = value;
+        rear = (rear + 1) % MAXSIZE;
     }
 
     int DeQueue()
@@ -50,8 +44,8 @@ public:
             cout << "Queue is empty" << endl;
             return -1;
         }
-        int value = arr->data[arr->front];
-        arr->front = (arr->front + 1) % MAXSIZE;
+        int value = arr[front];
+        front = (front + 1) % MAXSIZE;
         return value;
     }
 
@@ -62,16 +56,16 @@ public:
             cout << "Queue is empty" << endl;
             return;
         }
-        for (int i = arr->front; i < arr->rear; i++)
+        for (int i = front; i < rear; i++)
         {
-            cout << arr->data[i] << " ";
+            cout << arr[i] << " ";
         }
         cout << endl;
     }
 
     int getSize()
     {
-        return (arr->rear - arr->front + MAXSIZE) % MAXSIZE;
+        return (rear - front + MAXSIZE) % MAXSIZE;
     }
 
     ~SeqQueue()
@@ -101,9 +95,11 @@ public:
                 EnQueue(value);
                 break;
             case 2:
-                if (DeQueue() != -1)
-                    cout << "Dequeued value: " << DeQueue() << endl;
+            {
+                cout << "Dequeued value: " << DeQueue() << endl;
                 break;
+            }
+
             case 3:
                 Output();
                 break;
