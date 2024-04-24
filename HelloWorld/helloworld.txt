@@ -1,0 +1,7 @@
+echo "Hello World!"
+std::cout << "Hello World!";
+printf("Hello World!");
+Console.Writeline("Hello World!");
+<?php echo "Hello World!";?>
+System.out.println("Hello World!");
+print("Hello World!")
