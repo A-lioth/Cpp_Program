@@ -1,5 +1,6 @@
 #include <iostream>
 #include <queue>
+#include <string>
 using namespace std;
 
 struct Node
@@ -34,6 +35,11 @@ public:
             Create(root->left);
             Create(root->right);
         }
+    }
+    // 创建哈夫曼树并计算哈夫曼编码
+    void createHaffmanTree(Node *&root, int n)
+    {
+        ;
     }
 
     void PreOrder(Node *root)
@@ -87,11 +93,7 @@ public:
         if (root == nullptr)
             return 0;
         else
-        {
-            int lh = Height(root->left);
-            int rh = Height(root->right);
-            return (lh > rh) ? (lh + 1) : (rh + 1);
-        }
+            return (Height(root->left) > Height(root->right)) ? (Height(root->left) + 1) : (Height(root->right) + 1);
     }
 
     int NodeCount(Node *root)
@@ -131,49 +133,92 @@ public:
         }
     }
 
+    // 以广义表形式输出先序遍历二叉树
+    void GTable(Node *&root)
+    {
+        cout << "( ";
+        if (root == nullptr)
+            cout << "# ";
+        else
+        {
+            cout << root->data << ", ";
+            GTable(root->left);
+            GTable(root->right);
+        }
+        cout << ") ";
+    }
+
     void Menu()
     {
         int choice;
         do
         {
-            cout << "\n1. Create\n2. Pre-Order Traversal\n3. In-Order Traversal\n4. Post-Order Traversal\n5. Level-Order Traversal\n6. Height\n7. Node Count\n8. Leaf Count\n9. Destroy\n10. Exit\n";
+            cout << "1. Create a binary tree" << endl;
+            cout << "2. Pre-order traversal" << endl;
+            cout << "3. In-order traversal" << endl;
+            cout << "4. Post-order traversal" << endl;
+            cout << "5. Level-order traversal" << endl;
+            cout << "6. Height of the binary tree" << endl;
+            cout << "7. Number of nodes in the binary tree" << endl;
+            cout << "8. Number of leaves in the binary tree" << endl;
+            cout << "9. Output the binary tree in G-table format" << endl;
+            cout << "10. Destroy the binary tree" << endl;
+            cout << "11. Exit" << endl;
+            cout << "Enter your choice: ";
             cin >> choice;
             switch (choice)
             {
             case 1:
                 Create(root);
+                cout << "Binary tree created successfully." << endl;
                 break;
             case 2:
                 PreOrder(root);
+                cout << endl;
                 break;
             case 3:
                 InOrder(root);
+                cout << endl;
                 break;
             case 4:
                 PostOrder(root);
+                cout << endl;
                 break;
             case 5:
                 LevelOrder(root);
                 break;
             case 6:
-                cout << "Height of the tree is " << Height(root) << endl;
+                cout << "Height of the binary tree: " << Height(root) << endl;
                 break;
             case 7:
-                cout << "Number of nodes in the tree is " << NodeCount(root) << endl;
+                cout << "Number of nodes in the binary tree: " << NodeCount(root) << endl;
                 break;
             case 8:
-                cout << "Number of leaves in the tree is " << LeafCount(root) << endl;
+                cout << "Number of leaves in the binary tree: " << LeafCount(root) << endl;
                 break;
             case 9:
-                Destroy(root);
+                cout << "Binary tree in G-table format: ";
+                GTable(root);
+                cout << endl;
                 break;
             case 10:
+                Destroy(root);
+                cout << "Binary tree destroyed successfully." << endl;
+                break;
+            case 11:
+                cout << "Creating Haffman Tree..." << endl;
+                cout << "Enter the number of nodes: ";
+                int n;
+                cin >> n;
+                createHaffmanTree(root, n);
+            case 12:
+                cout << "Exiting program..." << endl;
                 break;
             default:
-                cout << "Invalid choice\n";
+                cout << "Invalid choice. Please try again." << endl;
                 break;
             }
-        } while (choice != 10);
+        } while (choice != 12);
     }
 };
 
@@ -183,3 +228,10 @@ int main()
     root.Menu();
     return 0;
 }
+
+// abc##d##ef##g##
+//     a
+//
+//   b   e
+//
+// c  d f  g
