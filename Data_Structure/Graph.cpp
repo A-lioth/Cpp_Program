@@ -1,150 +1,257 @@
 #include <iostream>
+#include <stack>
+#include <queue>
+#include <vector>
+
 using namespace std;
 
-const int MaxVERTEX = 100;
-const int INF = 99;
-
-class MGraph
+class Graph
 {
 private:
-    int vertex[MaxVERTEX];
-    char vertexName[MaxVERTEX];
-    int arc[MaxVERTEX][MaxVERTEX];
-    int vexnum;
-    int edgenum;
+    int numVertices;
+    vector<vector<int>> adjList;
+    vector<vector<int>> adjMatrix;
 
 public:
-    MGraph()
+    Graph(int n) : numVertices(n), adjList(n), adjMatrix(n, vector<int>(n, 0)) {}
+
+    void addEdge(int v1, int v2)
     {
-        for (int i = 0; i < MaxVERTEX; i++)
-        {
-            for (int j = 0; j < MaxVERTEX; j++)
-            {
-                arc[i][j] = INF;
-            }
-            vexnum = 0;
-            edgenum = 0;
-        }
+        adjList[v1].push_back(v2);
+        adjMatrix[v1][v2] = 1;
     }
 
-    void Create()
+    void printAdjList()
     {
-
-        cout << "Please input the number of vertices: ";
-        cin >> vexnum;
-        cout << "please input the number of edges: ";
-        cin >> edgenum;
-        cout << "please input the name of each vertex: ";
-        for (int i = 0; i < vexnum; i++)
+        for (int i = 0; i < numVertices; ++i)
         {
-            vertex[i] = i;
-            cin >> vertexName[i];
-        }
-        for (int i = 0; i < edgenum; i++)
-        {
-            int vi, vj, weight;
-            cout << "please input the start vertex and end vertex and weight of edge: ";
-            cin >> vi >> vj >> weight;
-            arc[vi][vj] = weight;
-            arc[vj][vi] = weight;
-        }
-    }
-
-    void Print()
-    {
-        // 杈撳嚭閭绘帴鐭╅樀
-        cout << "The Collination Matrix is:" << endl;
-        for (int i = 0; i < vexnum; i++)
-        {
-            for (int j = 0; j < vexnum; j++)
+            cout << "顶点 " << i << " 的邻接顶点：";
+            for (auto it = adjList[i].begin(); it != adjList[i].end(); ++it)
             {
-                cout << arc[i][j] << " ";
+                cout << "-> " << *it << " ";
             }
             cout << endl;
         }
     }
 
-    int getVexPos(char name)
+    void printAdjMatrix()
     {
-        int i;
-        for (i = 0; i < vexnum; i++)
+        for (int i = 0; i < numVertices; ++i)
         {
-            if (vertexName[i] == name)
+            for (int j = 0; j < numVertices; ++j)
             {
+                cout << adjMatrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    // 基于邻接矩阵的深度优先遍历
+    void DFS1(int startVertex)
+    {
+        vector<bool> visited(numVertices, false);
+        dfsUtil(startVertex, visited);
+        cout << endl;
+    }
+
+    void dfsUtil(int vertex, vector<bool> &visited)
+    {
+        visited[vertex] = true;
+        cout << vertex << " ";
+
+        for (auto it = adjList[vertex].begin(); it != adjList[vertex].end(); ++it)
+        {
+            if (!visited[*it])
+            {
+                dfsUtil(*it, visited);
+            }
+        }
+    }
+
+    // 基于邻接表的深度优先遍历
+    void DFS2(int startVertex)
+    {
+        vector<bool> visited(numVertices, false);
+        stack<int> s;
+        s.push(startVertex);
+        visited[startVertex] = true;
+
+        while (!s.empty())
+        {
+            int vertex = s.top();
+            s.pop();
+            cout << vertex << " ";
+
+            for (auto it = adjList[vertex].begin(); it != adjList[vertex].end(); ++it)
+            {
+                if (!visited[*it])
+                {
+                    s.push(*it);
+                    visited[*it] = true;
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    // 基于邻接矩阵的广度优先遍历
+    void BFS1(int startVertex)
+    {
+        vector<bool> visited(numVertices, false);
+        queue<int> q;
+        q.push(startVertex);
+        visited[startVertex] = true;
+
+        while (!q.empty())
+        {
+            int vertex = q.front();
+            cout << vertex << " ";
+            q.pop();
+
+            for (int i = 0; i < numVertices; ++i)
+            {
+                if (adjMatrix[vertex][i] == 1 && !visited[i])
+                {
+                    q.push(i);
+                    visited[i] = true;
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    // 基于邻接表的广度优先遍历
+    void BFS2(int startVertex)
+    {
+        vector<bool> visited(numVertices, false);
+        queue<int> q;
+        q.push(startVertex);
+        visited[startVertex] = true;
+
+        while (!q.empty())
+        {
+            int vertex = q.front();
+            cout << vertex << " ";
+            q.pop();
+
+            for (auto it = adjList[vertex].begin(); it != adjList[vertex].end(); ++it)
+            {
+                if (!visited[*it])
+                {
+                    q.push(*it);
+                    visited[*it] = true;
+                }
+            }
+        }
+        cout << endl;
+    }
+
+    void inOutDegree()
+    {
+        vector<int> inDegree(numVertices, 0);
+        for (auto it = adjList.begin(); it != adjList.end(); ++it)
+        {
+            for (auto it2 = it->begin(); it2 != it->end(); ++it2)
+            {
+                inDegree[*it2]++;
+            }
+        }
+
+        for (int i = 0; i < numVertices; ++i)
+        {
+            int outDegree = adjList[i].size();
+            cout << "顶点 " << i << " 的入度为 " << inDegree[i] << ", 出度为 " << outDegree << endl;
+        }
+    }
+
+    void topologicalSort()
+    {
+    }
+
+    void Menu()
+    {
+        int choice;
+        do
+        {
+            cout << "1. 添加边" << endl;
+            cout << "2. 输出邻接表" << endl;
+            cout << "3. 输出邻接矩阵" << endl;
+            cout << "4. 深度优先遍历（基于邻接矩阵）" << endl;
+            cout << "5. 广度优先遍历（基于邻接矩阵）" << endl;
+            cout << "6. 深度优先遍历（基于邻接表）" << endl;
+            cout << "7. 广度优先遍历（基于邻接表）" << endl;
+            cout << "8. 计算每个顶点的入度和出度" << endl;
+            cout << "0. 退出" << endl;
+            cout << "请输入选项：";
+            cin >> choice;
+
+            switch (choice)
+            {
+            case 1:
+            {
+                int v1, v2;
+                cout << "请输入两个顶点：" << endl;
+                cin >> v1 >> v2;
+                addEdge(v1, v2);
                 break;
             }
-        }
-        if (i == vexnum)
-        {
-            cout << "No such vertex!" << endl;
-            return -1;
-        }
-    }
-
-    void addVex(char name)
-    {
-        vertex[vexnum] = vexnum;
-        vertexName[vexnum] = name;
-        vexnum++;
-    }
-
-    void delVex(char name)
-    {
-        int i;
-        for (i = 0; i < vexnum; i++)
-        {
-            if (vertexName[i] == name)
+            case 2:
+                printAdjList();
+                break;
+            case 3:
+                printAdjMatrix();
+                break;
+            case 4:
             {
+                int startVertex;
+                cout << "请输入起始顶点：" << endl;
+                cin >> startVertex;
+                DFS1(startVertex);
                 break;
             }
-        }
-        for (int j = i; j < vexnum - 1; j++)
-        {
-            vertexName[j] = vertexName[j + 1];
-            vexnum--;
-        }
-        for (int j = i; j < vexnum - 1; j++)
-        {
-            for (int k = 0; k < vexnum; k++)
+            case 5:
             {
-                arc[j][k] = arc[j + 1][k];
+                int startVertex;
+                cout << "请输入起始顶点：" << endl;
+                cin >> startVertex;
+                BFS1(startVertex);
+                break;
             }
-        }
-        for (int j = 0; j < vexnum; j++)
-        {
-            for (int k = vexnum - 1; k > i; k--)
+            case 6:
             {
-                arc[j][k] = arc[j][k + 1];
+                int startVertex;
+                cout << "请输入起始顶点：" << endl;
+                cin >> startVertex;
+                DFS2(startVertex);
+                break;
             }
-        }
-        vexnum--;
-    }
-
-    void addEdge(int vi, int vj, int weight)
-    {
-        arc[vi][vj] = weight;
-        arc[vj][vi] = weight;
-        edgenum++;
+            case 7:
+            {
+                int startVertex;
+                cout << "请输入起始顶点：" << endl;
+                cin >> startVertex;
+                BFS2(startVertex);
+                break;
+            }
+            case 8:
+                inOutDegree();
+                break;
+            case 0:
+                break;
+            default:
+                cout << "输入错误，请重新输入！" << endl;
+                break;
+            }
+        } while (choice != 0);
     }
 };
 
 int main()
 {
-    MGraph g;
-    g.Create();
-    g.Print();
-    g.addVex('a');
-    g.Print();
-    g.delVex('a');
-    g.Print();
+    int n;
+    cout << "请输入顶点数：" << endl;
+    cin >> n;
+    Graph g(n);
+    g.Menu();
     return 0;
 }
-
-// 5 6
-// a b c d e
-// 0 1 2 3 4
-// 0 1 9
-// 0 2 2
-// 0 4 6
-// 1 2 3
-// 3 4 1
