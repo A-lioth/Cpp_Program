@@ -23,12 +23,12 @@ public:
 
     void printAdjList()
     {
-        for (int i = 0; i < numVertices; ++i)
+        for (int i = 0; i < numVertices; i++)
         {
             cout << "顶点 " << i << " 的邻接顶点：";
-            for (auto it = adjList[i].begin(); it != adjList[i].end(); ++it)
+            for (auto v: adjList[i])
             {
-                cout << "-> " << *it << " ";
+                cout << "-> " << v << " ";
             }
             cout << endl;
         }
@@ -36,13 +36,13 @@ public:
 
     void printAdjMatrix()
     {
-        for (int i = 0; i < numVertices; ++i)
+        for (int i = 0; i < numVertices; i++)
         {
-            for (int j = 0; j < numVertices; ++j)
+            for (int j = 0; j < numVertices; j++)
             {
                 cout << adjMatrix[i][j] << " ";
             }
-            cout << endl;
+            cout << endl; 
         }
     }
 
@@ -59,11 +59,11 @@ public:
         visited[vertex] = true;
         cout << vertex << " ";
 
-        for (auto it = adjList[vertex].begin(); it != adjList[vertex].end(); ++it)
+        for (int i = 0; i < numVertices; i++)
         {
-            if (!visited[*it])
+            if (adjMatrix[vertex][i] == 1 && !visited[i])
             {
-                dfsUtil(*it, visited);
+                dfsUtil(i, visited);
             }
         }
     }
@@ -82,12 +82,12 @@ public:
             s.pop();
             cout << vertex << " ";
 
-            for (auto it = adjList[vertex].begin(); it != adjList[vertex].end(); ++it)
+            for (auto i : adjList[vertex])
             {
-                if (!visited[*it])
+                if (!visited[i])
                 {
-                    s.push(*it);
-                    visited[*it] = true;
+                    s.push(i);
+                    visited[i] = true;
                 }
             }
         }
@@ -108,7 +108,7 @@ public:
             cout << vertex << " ";
             q.pop();
 
-            for (int i = 0; i < numVertices; ++i)
+            for (int i = 0; i < numVertices; i++)
             {
                 if (adjMatrix[vertex][i] == 1 && !visited[i])
                 {
@@ -134,12 +134,12 @@ public:
             cout << vertex << " ";
             q.pop();
 
-            for (auto it = adjList[vertex].begin(); it != adjList[vertex].end(); ++it)
+            for (auto i : adjList[vertex])
             {
-                if (!visited[*it])
+                if (!visited[i])
                 {
-                    q.push(*it);
-                    visited[*it] = true;
+                    q.push(i);
+                    visited[i] = true;
                 }
             }
         }
@@ -149,23 +149,72 @@ public:
     void inOutDegree()
     {
         vector<int> inDegree(numVertices, 0);
-        for (auto it = adjList.begin(); it != adjList.end(); ++it)
+        vector<int> outDegree(numVertices, 0);
+        for (int i = 0; i < numVertices; i++)
         {
-            for (auto it2 = it->begin(); it2 != it->end(); ++it2)
+            outDegree[i] = adjList[i].size();
+            for (auto j : adjList[i])
             {
-                inDegree[*it2]++;
+                inDegree[j]++;
             }
         }
 
-        for (int i = 0; i < numVertices; ++i)
+        for (int i = 0; i < numVertices; i++)
         {
-            int outDegree = adjList[i].size();
-            cout << "顶点 " << i << " 的入度为 " << inDegree[i] << ", 出度为 " << outDegree << endl;
+            cout << "顶点 " << i << " 的入度为 " << inDegree[i] << ", 出度为 " << outDegree[i] << endl;
         }
     }
 
     void topologicalSort()
     {
+        vector<int> inDegree(numVertices, 0);
+        for (auto i : adjList)
+        {
+            for (auto j : i)
+            {
+                inDegree[j]++;
+            }
+        }
+
+        queue<int> q;
+        for (int i = 0; i < numVertices; i++)
+        {
+            if (inDegree[i] == 0)
+            {
+                q.push(i);
+            }
+        }
+
+        vector<int> topoOrder;
+        while (!q.empty())
+        {
+            int vertex = q.front();
+            q.pop();
+            topoOrder.push_back(vertex);
+
+            for (auto i : adjList[vertex])
+            {
+                inDegree[i]--;
+                if (inDegree[i] == 0)
+                {
+                    q.push(i);
+                }
+            }
+        }
+
+        if (topoOrder.size() == numVertices)
+        {
+            cout << "拓扑排序成功！" << endl;
+            for (auto i : topoOrder)
+            {
+                cout << i << " ";
+            }
+            cout << endl;
+        }
+        else
+        {
+            cout << "拓扑排序失败！" << endl;
+        }
     }
 
     void Menu()
@@ -181,6 +230,7 @@ public:
             cout << "6. 深度优先遍历（基于邻接表）" << endl;
             cout << "7. 广度优先遍历（基于邻接表）" << endl;
             cout << "8. 计算每个顶点的入度和出度" << endl;
+            cout << "9. 拓扑排序" << endl;
             cout << "0. 退出" << endl;
             cout << "请输入选项：";
             cin >> choice;
@@ -235,6 +285,9 @@ public:
             }
             case 8:
                 inOutDegree();
+                break;
+            case 9:
+                topologicalSort();
                 break;
             case 0:
                 break;
