@@ -25,9 +25,9 @@ int main()
 {
     vector<int> arr = {5, 3, 8, 4, 2, 7, 1, 6};
     bubbleSort(arr);
-    for (int i = 0; i < arr.size(); i++)
+    for (int v : arr)
     {
-        cout << arr[i] << " ";
+        cout << v << " ";
     }
     return 0;
 }
