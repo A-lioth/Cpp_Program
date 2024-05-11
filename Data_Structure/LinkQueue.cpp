@@ -20,7 +20,7 @@ public:
 
     bool isEmpty()
     {
-        return (front == rear);
+        return front == nullptr;
     }
 
     void EnQueue(int val)
@@ -28,27 +28,29 @@ public:
         Node *s = new Node;
         s->data = val;
         s->next = nullptr;
-        if (rear == nullptr)
+        if (front == nullptr)
         {
             front = rear = s;
-            return;
         }
-        rear->next = s;
-        rear = s;
+        else
+        {
+            rear->next = s;
+            rear = s;
+        }
     }
 
-    int DeQueue()
+    void DeQueue()
     {
         if (isEmpty())
         {
             cout << "Queue is empty" << endl;
-            return -1;
+            return;
         }
-        int val = front->data;
         Node *p = front;
+        int val = p->data;
+        cout << "Dequeued value: " << val << endl;
         front = front->next;
         delete p;
-        return val;
     }
 
     void Output()
@@ -76,13 +78,13 @@ public:
 
     ~LinkQueue()
     {
-        Node *p = front;
-        while (p != nullptr)
-        {
-            Node *q = p;
-            p = p->next;
-            delete q;
-        }
+       while (!isEmpty())
+       {
+           Node *p = front;
+           front = front->next;
+           delete p;
+       }
+       front = rear = nullptr;
     }
 
     void Menu()
@@ -109,7 +111,7 @@ public:
             }
             case 2:
             {
-                cout << "Dequeued value: " << DeQueue() << endl;
+                DeQueue();
                 break;
             }
             case 3:
