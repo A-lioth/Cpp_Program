@@ -1,10 +1,13 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include "MedianThree.h"
 using namespace std;
 
 int partition(vector<int>& arr, int left, int right) 
 {
+    int med = medianThree(arr, left, (left + right) / 2, right);
+    swap(arr[left], arr[med]);
+
     int i= left, j= right;
     while (i < j) 
     {
@@ -19,7 +22,7 @@ int partition(vector<int>& arr, int left, int right)
     return i;
 }
 
-void quickSort(vector<int>& arr, int left, int right) 
+/* void quickSort(vector<int>& arr, int left, int right) 
 {
     if (left < right) 
     {
@@ -27,8 +30,26 @@ void quickSort(vector<int>& arr, int left, int right)
         quickSort(arr, left, pivot - 1);
         quickSort(arr, pivot + 1, right);
     }
-}
+} */
 
+// 尾递归优化
+void quickSort(vector<int>& arr, int left, int right) 
+{
+    while (left < right) 
+    {
+        int pivot = partition(arr, left, right);
+        if (pivot - left < right - pivot)
+        {
+            quickSort(arr, left, pivot - 1);
+            left = pivot + 1;
+        }
+        else
+        {
+            quickSort(arr, pivot + 1, right);
+            right = pivot - 1;
+        }
+    }
+}
 
 int main() 
 {
