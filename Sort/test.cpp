@@ -1,11 +1,12 @@
 #include <iostream>
+#include <functional>
+#include "Quick.cpp"
 #include "Insertion.cpp"
 #include "BubbleWithFlag.cpp"
 #include "Shell.cpp"
 #include "Selection.cpp"
-#include "Quick.cpp"
 #include "Heap.cpp"
-#include <time.h>
+#include <ctime>
 #include <stdlib.h>
 #include <vector>
 
@@ -16,7 +17,7 @@ typedef void (*SortFunc1)(vector<int> &nums, int n, int m);
 
 void init(vector<int> &nums)
 {
-    srand((unsigned)time(nullptr));
+    srand((unsigned)time(NULL));
     for (int i = 0; i < nums.size(); i++)
     {
         nums[i] = rand() % 10000;
@@ -27,7 +28,7 @@ void print(vector<int> &nums)
 {
     for (int i = 0; i < nums.size(); i++)
     {
-        cout << nums[i] << " ";
+        printf("%-d ", nums[i]);
         if (i % 10 == 9)
         {
             cout << endl;
@@ -36,20 +37,24 @@ void print(vector<int> &nums)
     cout << endl;
 }
 
-double countTime(vector<int> nums, SortFunc func = nullptr, SortFunc1 func1 = nullptr)
+double countTime(vector<int> nums, function<void(vector<int> &)> func = nullptr, function<void(vector<int> &, int, int)> func1 = nullptr)
 {
     clock_t start, end;
-    start = clock();
     if (func)
     {
+        start = clock();
         func(nums);
+        end = clock();
+        return ((double)(end - start)) / CLOCKS_PER_SEC;
     }
     else if (func1)
     {
+        start = clock();
         func1(nums, 0, nums.size() - 1);
+        end = clock();
+        return ((double)(end - start)) / CLOCKS_PER_SEC;
     }
-    end = clock();
-    return ((double)(end - start)) / CLOCKS_PER_SEC;
+    return 0;
 }
 
 int main()
@@ -73,12 +78,12 @@ int main()
             print(nums);
             break;
         case 3:
-            cout << "Insertion Sort: " << countTime(nums, insertionSort) << "s" << endl;
-            cout << "Bubble Sort: " << countTime(nums, bubbleSort) << "s" << endl;
-            cout << "Shell Sort: " << countTime(nums, shellSort) << "s" << endl;
-            cout << "Selection Sort: " << countTime(nums, selectionSort) << "s" << endl;
-            cout << "Heap Sort: " << countTime(nums, heapSort) << "s" << endl;
+            cout << "Shell Sort: " << countTime(nums, shellSort, nullptr) << "s" << endl;
+            cout << "Heap Sort: " << countTime(nums, heapSort, nullptr) << "s" << endl;
+            cout << "Insertion Sort: " << countTime(nums, insertionSort, nullptr) << "s" << endl;
+            cout << "Selection Sort: " << countTime(nums, selectionSort, nullptr) << "s" << endl;
             cout << "Quick Sort: " << countTime(nums, nullptr, quickSort) << "s" << endl;
+            cout << "Bubble Sort: " << countTime(nums, bubbleSort, nullptr) << "s" << endl;
             break;
         case 0:
             break;

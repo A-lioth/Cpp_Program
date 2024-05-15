@@ -42,7 +42,7 @@ void heapSort(vector<int> &nums)
         siftDown(nums, i, 0);
     }
 }
-
+/*
 int main()
 {
     vector<int> nums = {5, 3, 8, 4, 2, 7, 6, 1};
@@ -54,3 +54,4 @@ int main()
     cout << endl;
     return 0;
 }
+*/
