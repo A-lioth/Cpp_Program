@@ -12,6 +12,7 @@ struct Node
 
 class BTree
 {
+    friend void test();
 private:
     Node *root;
 
@@ -42,34 +43,34 @@ public:
         ;
     }
 
-    void PreOrder(Node *root)
+    void preOrder(Node *root)
     {
         if (root == nullptr)
             return;
         cout << root->data << " ";
-        PreOrder(root->left);
-        PreOrder(root->right);
+        preOrder(root->left);
+        preOrder(root->right);
     }
 
-    void InOrder(Node *root)
+    void inOrder(Node *root)
     {
         if (root == nullptr)
             return;
-        InOrder(root->left);
+        inOrder(root->left);
         cout << root->data << " ";
-        InOrder(root->right);
+        inOrder(root->right);
     }
 
-    void PostOrder(Node *root)
+    void postOrder(Node *root)
     {
         if (root == nullptr)
             return;
-        PostOrder(root->left);
-        PostOrder(root->right);
+        postOrder(root->left);
+        postOrder(root->right);
         cout << root->data << " ";
     }
 
-    void LevelOrder(Node *root)
+    void levelOrder(Node *root)
     {
         if (root == nullptr)
             return;
@@ -163,7 +164,8 @@ public:
             cout << "8. Number of leaves in the binary tree" << endl;
             cout << "9. Output the binary tree in G-table format" << endl;
             cout << "10. Destroy the binary tree" << endl;
-            cout << "11. Exit" << endl;
+            cout << "11. Create Haffman Tree" << endl;
+            cout << "12. Exit" << endl;
             cout << "Enter your choice: ";
             cin >> choice;
             switch (choice)
@@ -173,19 +175,19 @@ public:
                 cout << "Binary tree created successfully." << endl;
                 break;
             case 2:
-                PreOrder(root);
+                preOrder(root);
                 cout << endl;
                 break;
             case 3:
-                InOrder(root);
+                inOrder(root);
                 cout << endl;
                 break;
             case 4:
-                PostOrder(root);
+                postOrder(root);
                 cout << endl;
                 break;
             case 5:
-                LevelOrder(root);
+                levelOrder(root);
                 break;
             case 6:
                 cout << "Height of the binary tree: " << Height(root) << endl;
@@ -221,14 +223,14 @@ public:
         } while (choice != 12);
     }
 };
-
+/* 
 int main()
 {
     BTree root;
     root.Menu();
     return 0;
 }
-
+ */
 // abc##d##ef##g##
 //     a
 //
