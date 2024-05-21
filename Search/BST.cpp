@@ -5,10 +5,10 @@ using namespace std;
 
 struct Node
 {
-    int data;
+    int val;
     Node *left;
     Node *right;
-    Node(int data, Node *left = nullptr, Node *right = nullptr) : data(data), left(left), right(right){};
+    Node(int val, Node *left = nullptr, Node *right = nullptr) : val(val), left(left), right(right){};
 };
 
 class BST
@@ -22,47 +22,47 @@ public:
         root = nullptr;
     }
 
-    void Insert(int data)
+    void Insert(int val)
     {
         if (root == nullptr)
         {
-            root = new Node(data);
+            root = new Node(val);
             return;
         }
         Node *p = root;
-        Node *leafptr = nullptr;
+        Node *leafPtr = nullptr;
 
         while (p != nullptr)
         {
-            if (p->data == data)
+            if (val == p->val)
             {
                 cout << "Value already exists in the tree." << endl;
                 return;
             }
-            leafptr = p;
+            leafPtr = p;
 
-            if (p->data > data)
+            if (val < p->val)
             {
                 p = p->left;
             }
-            else
+            else if (val > p->val)
             {
                 p = p->right;
             }
         }
 
-        Node *s = new Node(data);
-        if (leafptr->data > data)
+        Node *s = new Node(val);
+        if (val < leafPtr->val)
         {
-            leafptr->left = s;
+            leafPtr->left = s;
         }
-        else
+        else if (val > leafPtr->val)
         {
-            leafptr->right = s;
+            leafPtr->right = s;
         }
     }
 
-    bool Search(int data)
+    bool Search(int val)
     {
         if (root == nullptr)
         {
@@ -71,11 +71,11 @@ public:
         Node *p = root;
         while (p != nullptr)
         {
-            if (p->data > data)
+            if (val < p->val)
             {
                 p = p->left;
             }
-            else if (p->data < data)
+            else if (val > p->val)
             {
                 p = p->right;
             }
@@ -86,7 +86,38 @@ public:
         }
         return false;
     }
-
+    /*
+        void Delete(int val)
+        {
+            if (root == nullptr)
+            {
+                return;
+            }
+            Node *p = root;
+            Node *leafPtr = nullptr;
+            while (p != nullptr)
+            {
+                if (p->val == val)
+                {
+                    break;
+                }
+                leafPtr = p;
+                if (val < p->val)
+                {
+                    p = p->left;
+                }
+                else if (val > p->val)
+                {
+                    p = p->right;
+                }
+            }
+            if (p == nullptr)
+            {
+                cout << "Value not found in the tree." << endl;
+                return;
+            }
+        }
+     */
     void inorder(Node *root)
     {
         if (root == nullptr)
@@ -94,17 +125,26 @@ public:
             return;
         }
         inorder(root->left);
-        cout << root->data << " ";
+        cout << root->val << " ";
         inorder(root->right);
+    }
+
+    void Destroy(Node *root)
+    {
+        if (root == nullptr)
+        {
+            return;
+        }
+        Destroy(root->left);
+        Destroy(root->right);
+        delete root;
+        root = nullptr;
     }
 
     ~BST()
     {
-        if (root != nullptr)
-        {
-            delete root;
-            root = nullptr;
-        }
+        Destroy(root);
+        root = nullptr;
     }
 
     void Menu(vector<int> &nums)
@@ -131,10 +171,10 @@ public:
             }
             case 2:
             {
-                int data;
+                int val;
                 cout << "Enter the value to be searched: ";
-                cin >> data;
-                if (Search(data))
+                cin >> val;
+                if (Search(val))
                 {
                     cout << "Value found in the tree." << endl;
                 }
