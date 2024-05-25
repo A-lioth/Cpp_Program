@@ -37,7 +37,6 @@ class BST
 {
 private:
     Node *root;
-    vector<int> inOrder;
 
 public:
     BST()
@@ -53,7 +52,7 @@ public:
             return;
         }
         Node *p = root;
-        Node *leafPtr = nullptr;
+        Node *q = nullptr;
 
         while (p != nullptr)
         {
@@ -62,7 +61,7 @@ public:
                 cout << "Value already exists in the tree." << endl;
                 return;
             }
-            leafPtr = p;
+            q = p;
 
             if (val < p->val)
             {
@@ -75,13 +74,13 @@ public:
         }
 
         Node *s = new Node(val);
-        if (val < leafPtr->val)
+        if (val < q->val)
         {
-            leafPtr->left = s;
+            q->left = s;
         }
-        else if (val > leafPtr->val)
+        else if (val > q->val)
         {
-            leafPtr->right = s;
+            q->right = s;
         }
     }
 
@@ -122,14 +121,14 @@ public:
             return;
         }
         Node *p = root;
-        Node *leafPtr = nullptr;
+        Node *q = nullptr;
         while (p != nullptr)
         {
             if (p->val == val)
             {
                 break;
             }
-            leafPtr = p;
+            q = p;
             if (val < p->val)
             {
                 p = p->left;
@@ -147,19 +146,19 @@ public:
         // 叶子
         if (isLeaf(p))
         {
-            if (leafPtr == nullptr)
+            if (q == nullptr)
             {
                 root = nullptr;
                 delete p;
             }
-            else if (val < leafPtr->val)
+            else if (val < q->val)
             {
-                leafPtr->left = nullptr;
+                q->left = nullptr;
                 delete p;
             }
-            else if (val > leafPtr->val)
+            else if (val > q->val)
             {
-                leafPtr->right = nullptr;
+                q->right = nullptr;
                 delete p;
             }
         }
@@ -167,18 +166,18 @@ public:
         else if (p->left == nullptr || p->right == nullptr)
         {
             Node *child = p->left == nullptr ? p->right : p->left;
-            if (leafPtr == nullptr)
+            if (q == nullptr)
             {
                 root = child;
                 delete p;
             }
-            else if (val < leafPtr->val)
+            else if (val < q->val)
             {
-                leafPtr->left = child;
+                q->left = child;
             }
-            else if (val > leafPtr->val)
+            else if (val > q->val)
             {
-                leafPtr->right = child;
+                q->right = child;
             }
             delete p;
         }
@@ -202,7 +201,7 @@ public:
             return;
         }
         inorder(root->left);
-        inOrder.push_back(root->val);
+        cout << root->val << " ";
         inorder(root->right);
     }
 
@@ -265,7 +264,7 @@ public:
             case 3:
             {
                 inorder(root);
-                Print(inOrder);
+                cout << endl;
                 break;
             }
             case 4:
