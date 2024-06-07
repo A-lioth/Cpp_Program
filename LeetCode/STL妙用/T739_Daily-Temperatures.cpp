@@ -1,21 +1,21 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 
 using namespace std;
 
 vector<int> dailyTemperatures(vector<int>& temperatures) 
 {
     vector<int> res(temperatures.size());
+    stack<int> s;
     for (int i = 0; i < temperatures.size(); i++) 
     {
-        for (int j = i + 1; j < temperatures.size(); j++) 
+        while (!s.empty() && temperatures[i] > temperatures[s.top()]) 
         {
-            if (temperatures[j] > temperatures[i]) 
-            {
-                res[i] = j - i;
-                break;
-            }
+            res[s.top()] = i - s.top();
+            s.pop();
         }
+        s.push(i);
     }
     return res;
 }
