@@ -1,10 +1,18 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
 int singleNonDuplicate(vector<int> &nums)
 {
+    unordered_map<int, int> seen;
+    for (int num : nums)
+        seen[num]++;
+    for (int num : nums)
+        if (seen[num] == 1)
+            return num;
+    return -1;
 }
 
 int main()
