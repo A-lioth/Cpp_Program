@@ -11,8 +11,13 @@ struct ListNode
     ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
+int count = 0;
 ListNode *removeNthFromEnd(ListNode *head, int n)
 {
+    if (head == nullptr)
+        return nullptr;
+    head->next = removeNthFromEnd(head->next, n);
+    return ++count == n ? head->next : head;
 }
 
 int main()
