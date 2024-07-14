@@ -12,8 +12,22 @@ struct TreeNode
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+long long count = 0;
+
+long long DFS(TreeNode *root, int targetSum)
+{
+    if (root == nullptr)
+        return 0;
+    if (root->val == targetSum)
+        count++;
+    count += DFS(root->left, targetSum - root->val);
+    count += DFS(root->right, targetSum - root->val);
+    return count;
+}
+
 int pathSum(TreeNode *root, int targetSum)
 {
+    return root == nullptr ? 0 : (pathSum(root->left, targetSum) + pathSum(root->right, targetSum) + DFS(root, targetSum));
 }
 
 int main()
