@@ -13,31 +13,38 @@ struct TreeNode
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-void DFS(TreeNode *root, int targetSum, int currentSum, unordered_map<int, int> &prefixSumCount, int &count)
+unordered_map<long, int> prefix;
+
+void DFS(TreeNode *root, int targetSum, long sum, int &res)
 {
     if (root == nullptr)
         return;
 
-    currentSum += root->val;
+    sum += root->val;
+    if (prefix.find(sum - targetSum) != prefix.end())
+        res += prefix[sum - targetSum];
 
-    if (prefixSumCount.find(currentSum - targetSum) != prefixSumCount.end())
-    {
-        count += prefixSumCount[currentSum - targetSum];
-    }
-    prefixSumCount[currentSum]++;
-    DFS(root->left, targetSum, currentSum, prefixSumCount, count);
-    DFS(root->right, targetSum, currentSum, prefixSumCount, count);
-
-    prefixSumCount[currentSum]--;
+    prefix[sum]++;
+    DFS(root->left, targetSum, sum, res);
+    DFS(root->right, targetSum, sum, res);
+    prefix[sum]--;
 }
 
 int pathSum(TreeNode *root, int targetSum)
 {
-    unordered_map<int, int> prefixSumCount;
-    prefixSumCount[0] = 1;
-    int count = 0;
-    DFS(root, targetSum, 0, prefixSumCount, count);
-    return count;
+    int res = 0; 
+    prefix[0] = 1;
+    long sum = 0;
+    DFS(root, targetSum, sum, res);
+    return res;
+}
+void deleteTree(TreeNode *root)
+{
+    if (root == nullptr)
+        return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
 }
 
 int main()
@@ -45,5 +52,6 @@ int main()
     TreeNode *root = new TreeNode(10, new TreeNode(5, new TreeNode(3, new TreeNode(3), new TreeNode(-2)), new TreeNode(2, new TreeNode(1), new TreeNode(1))), new TreeNode(-3, NULL, new TreeNode(11)));
     int targetSum = 8;
     cout << pathSum(root, targetSum) << endl;
+    deleteTree(root);
     return 0;
 }
