@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -8,26 +9,35 @@ struct TreeNode
     TreeNode *left;
     TreeNode *right;
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-long long count = 0;
-
-long long DFS(TreeNode *root, int targetSum)
+void DFS(TreeNode *root, int targetSum, int currentSum, unordered_map<int, int> &prefixSumCount, int &count)
 {
     if (root == nullptr)
-        return 0;
-    if (root->val == targetSum)
-        count++;
-    count += DFS(root->left, targetSum - root->val);
-    count += DFS(root->right, targetSum - root->val);
-    return count;
+        return;
+
+    currentSum += root->val;
+
+    if (prefixSumCount.find(currentSum - targetSum) != prefixSumCount.end())
+    {
+        count += prefixSumCount[currentSum - targetSum];
+    }
+    prefixSumCount[currentSum]++;
+    DFS(root->left, targetSum, currentSum, prefixSumCount, count);
+    DFS(root->right, targetSum, currentSum, prefixSumCount, count);
+
+    prefixSumCount[currentSum]--;
 }
 
 int pathSum(TreeNode *root, int targetSum)
 {
-    return root == nullptr ? 0 : (pathSum(root->left, targetSum) + pathSum(root->right, targetSum) + DFS(root, targetSum));
+    unordered_map<int, int> prefixSumCount;
+    prefixSumCount[0] = 1;
+    int count = 0;
+    DFS(root, targetSum, 0, prefixSumCount, count);
+    return count;
 }
 
 int main()
