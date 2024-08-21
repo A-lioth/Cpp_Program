@@ -10,17 +10,15 @@ bool isValid(string s)
     {
         if (c == '(' || c == '[' || c == '{')
             sk.push(c);
-
-        else if (c == ')' && !sk.empty() && sk.top() == '(')
-            sk.pop();
-
-        else if (c == ']' && !sk.empty() && sk.top() == '[')
-            sk.pop();
-
-        else if (c == '}' && !sk.empty() && sk.top() == '{')
-            sk.pop();
         else
-            return false;
+        {
+            if (sk.empty())
+                return false;
+            if ((c == ')' && sk.top() == '(') || (c == ']' && sk.top() == '[') || (c == '}' && !sk.empty() && sk.top() == '{'))
+                sk.pop();
+            else
+                return false;
+        }
     }
     return sk.empty();
 }
@@ -28,6 +26,9 @@ bool isValid(string s)
 int main()
 {
     string s = "()[]{}";
-    cout << isValid(s) << endl; 
+    if (isValid(s))
+        cout << "Parentheses are valid." << endl;
+    else
+        cout << "Parentheses are not valid." << endl;
     return 0;
 }
