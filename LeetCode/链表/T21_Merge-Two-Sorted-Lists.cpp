@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -27,6 +28,45 @@ ListNode *mergeTwoLists(ListNode *list1, ListNode *list2)
         list2->next = mergeTwoLists(list1, list2->next);
         return list2;
     }
+}
+
+ListNode *mergeTwoListsByStack(ListNode *list1, ListNode *list2)
+{
+    stack<pair<ListNode *, ListNode *>> s;
+    s.push({list1, list2});
+
+    ListNode dummy;
+    ListNode *tail = &dummy;
+
+    while (!s.empty())
+    {
+        auto p = s.top();
+        s.pop();
+
+        if (p.first == nullptr)
+        {
+            tail->next = p.second;
+            continue;
+        }
+        if (p.second == nullptr)
+        {
+            tail->next = p.first;
+            continue;            
+        }
+
+        if (p.first->val < p.second->val)
+        {
+            tail->next = p.first;
+            s.push({p.first->next, p.second});
+        }
+        else
+        {
+            tail->next = p.second;
+            s.push({p.first, p.second->next});
+        }
+        tail = tail->next;
+    }
+    return dummy.next;
 }
 
 int main()
