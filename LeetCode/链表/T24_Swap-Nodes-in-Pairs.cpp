@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 
 using namespace std;
 
@@ -21,10 +22,40 @@ ListNode *swapPairs(ListNode *head)
     return newHead;
 }
 
+ListNode *swapPairsByStack(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return head;
+
+    stack<ListNode *> s;
+    ListNode dummy;
+    ListNode *prev = &dummy;
+    ListNode *curr = head;
+
+    while (curr != nullptr && curr->next != nullptr)
+    {
+        s.push(curr);
+        s.push(curr->next);
+
+        curr = curr->next->next;
+
+        prev->next = s.top();
+        s.pop();
+        prev = prev->next;
+
+        prev->next = s.top();
+        s.pop();
+        prev = prev->next;
+    }
+    prev->next = curr;
+
+    return dummy.next;
+}
+
 int main()
 {
     ListNode *head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4))));
-    ListNode *newHead = swapPairs(head);
+    ListNode *newHead = swapPairsByStack(head);
     while (newHead)
     {
         cout << newHead->val << " ";
